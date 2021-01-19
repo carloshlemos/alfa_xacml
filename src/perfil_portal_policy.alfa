@@ -1,0 +1,37 @@
+namespace perfil_portal_policy {
+	import Attributes.*
+
+	policyset userPortal {
+		target
+			clause stringRegexpMatch("^.*[A-Z]", Attributes.actionId)
+				or Attributes.actionId == "validarRota"
+		apply firstApplicable
+
+		policy valida {
+			target
+				clause stringRegexpMatch("^.*[A-Z]", Attributes.actionId)
+					or Attributes.actionId == "validarRota"
+			apply firstApplicable
+
+			rule valida_rota {
+				target
+			clause Attributes.actionId == "validarRota"
+				condition Attributes.resourceId == Attributes.resourceIdPortal
+				              
+				permit
+			}
+			
+			rule valida_unidade_acesso {
+			target
+				clause stringRegexpMatch("^.*[A-Z]", Attributes.actionId)
+				condition Attributes.actionId == Attributes.actionIdPortal
+				              
+				permit
+			}
+			
+			rule deny_rule {
+				deny
+			}
+		}
+	}
+}
